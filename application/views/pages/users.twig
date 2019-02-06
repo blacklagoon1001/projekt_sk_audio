@@ -1,0 +1,53 @@
+{% include "templates/header.twig" %}
+
+<div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">Użytkownicy</h1>
+                {% if message %}
+                    {% if message.success == true %}
+                        <div class="alert alert-success">{{ message.message }}</div>
+                    {% else %}
+                        <div class="alert alert-danger">{{ message.message }}</div>
+                    {% endif %}
+                {% endif %}
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>Imię i nazwisko</th>
+                            <th>Login</th>
+                            <th>Email</th>
+                            <th>Akcje</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {%  for user in users %}
+                            <td>{{ user.name_surname }}</td>
+                            <td>{{ user.name }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>
+                                <a href="{{ base_url }}users/edit/{{ user.user_id }}"><i class="fa fa-edit fa-fw"></i></a>
+                                {% if user_id != user.user_id %}<a href="{{ base_url }}users/delete_user/{{ user.user_id }}"><i class="fa fa-trash fa-fw"></i></a>{% endif %}
+                            </td>
+                            </tr>
+                        {%  endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        <!-- /.row -->
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /#page-wrapper -->
+</div>
+<!-- /#wrapper -->
+
+{% include "templates/footer.twig" %}

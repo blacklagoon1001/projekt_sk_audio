@@ -1,0 +1,208 @@
+{% include "templates/header.twig" %}
+
+<div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">Dodaj nowe wydarzenie</h1>
+                {% if message %}
+                    {% if message.success == true %}
+                        <div class="alert alert-success">{{ message.message }}</div>
+                    {% else %}
+                        <div class="alert alert-danger">{{ message.message }}</div>
+                    {% endif %}
+                {% endif %}
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+        <div class="row">
+            <div class="col-lg-12">
+                <form role="form" method="post" id="add_event" action="{{ base_url() }}orders/add_order">
+                    <div class="form-group">
+                        <label>Nazwa wydarzenia</label>
+                        <input class="form-control" type="text" id="name" name="name" placeholder="Nazwa">
+                    </div>
+                    <div class="form-group">
+                        <label>Klient</label>
+                        <select class="form-control" id="client_id" name="client_id">
+                            {%  for client in clients %}
+                                    <option value = "{{ client.client_id }}">{{ client.name }}</option>
+                            {%  endfor %}
+                        </select>
+                    </div>
+                    <div class='col-md-6 datetime'>
+                        <div class="form-group">
+                            <label>Data i godzina rozpoczęcia</label>
+                            <div class='input-group date' id='datetimepicker6'>
+                                <input type='text' class="form-control" id="start" name="start"/>
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class='col-md-6 datetime1'>
+                        <div class="form-group">
+                            <label>Data i godzina zakończenia</label>
+                            <div class='input-group date' id='datetimepicker7'>
+                                <input type='text' class="form-control" id="end" name="end"/>
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-danger" id="check_equipment">Sprawdź dostępność sprzętu w podanym terminie</button>
+                    <div id="equipment_div">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a data-toggle="pill" href="#sound">Dźwięk</a></li>
+                            <li><a data-toggle="pill" href="#light">Światło</a></li>
+                        </ul>
+                        <div class="tab-content">
+                        <div id="sound" class="tab-pane fade in active panel_eq">
+                            <ul class="nav nav-tabs">
+                                {% set firstSound = sound|first %}
+                                {% for s in sound %}
+                                    {% if loop.first %}
+                                        <li class="active"><a data-toggle="pill" href="#category{{ s.category_id }}">{{ s.category }}</a></li>
+                                    {%  else %}
+                                        <li><a data-toggle="pill" href="#category{{ s.category_id }}">{{ s.category }}</a></li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                            <div class="tab-content">
+                                {%  for s in sound %}
+                                    {% if loop.first %}
+                                        <div id="category{{ s.category_id }}" class="tab-pane fade in active">
+                                    {% else %}
+                                        <div id="category{{ s.category_id }}" class="tab-pane fade">
+                                    {%  endif %}
+                                    <div class="panel panel-default">
+                                        <!-- /.panel-heading -->
+                                        <div class="panel-body">
+                                            <div class="table-responsive">
+                                                <table class="table table-hover">
+                                                    <thead>
+                                                    <tr>
+                                                        <th>Nazwa</th>
+                                                        <th>Ilość</th>
+                                                        <th>Dostępność</th>
+                                                        <th>Opis</th>
+                                                        <th>Akcje</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    {%  for product in s.products %}
+                                                        {% if product.available == 0 %}
+                                                            <tr class="not_available">
+                                                        {% else %}
+                                                            <tr>
+                                                        {% endif %}
+                                                        <td>{{ product.name }}</td>
+                                                        <td>{{ product.quantity }}</td>
+                                                        <td>{{ product.available }}</td>
+                                                        <td>{{ product.description }}</td>
+                                                        <td>
+                                                            <a href="{{ base_url }}equipment/edit/{{ product.product_id }}"><i class="fa fa-edit fa-fw"></i></a>
+                                                            <a href="{{ base_url }}equipment/delete_equipment/{{ product.product_id }}"><i class="fa fa-trash fa-fw"></i></a>
+                                                        </td>
+                                                        </tr>
+                                                    {%  endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <!-- /.table-responsive -->
+                                        </div>
+                                        <!-- /.panel-body -->
+                                    </div>
+                                    {% if loop.first %}
+                                        </div>
+                                    {% else %}
+                                        </div>
+                                    {%  endif %}
+                                {%  endfor %}
+                            </div>
+                        </div>
+                        <div id="light" class="tab-pane fade panel_eq">
+                            <ul class="nav nav-tabs">
+                                {% set firstSound = light|first %}
+                                {% for l in light %}
+                                    {% if loop.first %}
+                                        <li class="active"><a data-toggle="pill" href="#category{{ l.category_id }}">{{ l.category }}</a></li>
+                                    {%  else %}
+                                        <li><a data-toggle="pill" href="#category{{ l.category_id }}">{{ l.category }}</a></li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                            <div class="tab-content">
+                                {%  for l in light %}
+                                    {% if loop.first %}
+                                        <div id="category{{ l.category_id }}" class="tab-pane fade in active">
+                                    {% else %}
+                                        <div id="category{{ l.category_id }}" class="tab-pane fade">
+                                    {%  endif %}
+                                    <div class="panel panel-default">
+                                        <!-- /.panel-heading -->
+                                        <div class="panel-body">
+                                            <div class="table-responsive">
+                                                <table class="table table-hover">
+                                                    <thead>
+                                                    <tr>
+                                                        <th>Nazwa</th>
+                                                        <th>Ilość</th>
+                                                        <th>Dostępność</th>
+                                                        <th>Opis</th>
+                                                        <th>Akcje</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    {%  for product in l.products %}
+                                                        {% if product.available == 0 %}
+                                                            <tr class="not_available">
+                                                        {% else %}
+                                                            <tr>
+                                                        {% endif %}
+                                                        <td>{{ product.name }}</td>
+                                                        <td>{{ product.quantity }}</td>
+                                                        <td>{{ product.available }}</td>
+                                                        <td>{{ product.description }}</td>
+                                                        <td>
+                                                            <a href="{{ base_url }}equipment/edit/{{ product.product_id }}"><i class="fa fa-edit fa-fw"></i></a>
+                                                            <a href="{{ base_url }}equipment/delete_equipment/{{ product.product_id }}"><i class="fa fa-trash fa-fw"></i></a>
+                                                        </td>
+                                                        </tr>
+                                                    {%  endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <!-- /.table-responsive -->
+                                        </div>
+                                        <!-- /.panel-body -->
+                                    </div>
+                                    {% if loop.first %}
+                                        </div>
+                                    {% else %}
+                                        </div>
+                                    {%  endif %}
+                                {%  endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Dodatkowe informacje (miejsce itp)</label>
+                        <textarea class="form-control" id="description" name="description" placeholder="Dodatkowe informacje"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Zapisz</button>
+                    <button type="reset" class="btn btn-default">Wyczyść</button>
+                </form>
+            </div>
+        </div>
+        <!-- /.row -->
+        <!-- /.row -->
+    </div>
+    <!-- /#page-wrapper -->
+</div>
+<!-- /#wrapper -->
+
+{% include "templates/footer.twig" %}

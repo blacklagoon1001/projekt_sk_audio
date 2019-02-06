@@ -1,0 +1,125 @@
+{% include "templates/header.twig" %}
+
+<div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">Sprzęt</h1>
+                {% if message %}
+                    {% if message.success == true %}
+                        <div class="alert alert-success">{{ message.message }}</div>
+                    {% else %}
+                        <div class="alert alert-danger">{{ message.message }}</div>
+                    {% endif %}
+                {% endif %}
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+        <div class="row">
+            <div class="col-lg-12">
+            <ul class="nav nav-tabs">
+                <li class="active"><a data-toggle="pill" href="#sound">Dźwięk</a></li>
+                <li><a data-toggle="pill" href="#light">Światło</a></li>
+            </ul>
+            <div class="tab-content">
+                <div id="sound" class="tab-pane fade in active panel_eq">
+                    {%  for s in sound %}
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                {{ s.category }}
+                            </div>
+                            <!-- /.panel-heading -->
+                            <div class="panel-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th>Nazwa</th>
+                                            <th>Ilość</th>
+                                            <th>Dostępność</th>
+                                            <th>Opis</th>
+                                            <th>Akcje</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {%  for product in s.products %}
+                                            {% if product.available == 0 %}
+                                                <tr class="not_available">
+                                            {% else %}
+                                                <tr>
+                                            {% endif %}
+                                                <td>{{ product.name }}</td>
+                                                <td>{{ product.quantity }}</td>
+                                                <td>{{ product.available }}</td>
+                                                <td>{{ product.description }}</td>
+                                                <td>
+                                                    <a href="{{ base_url }}equipment/edit/{{ product.product_id }}"><i class="fa fa-edit fa-fw"></i></a>
+                                                    <a href="{{ base_url }}equipment/delete_equipment/{{ product.product_id }}"><i class="fa fa-trash fa-fw"></i></a>
+                                                </td>
+                                            </tr>
+                                        {%  endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!-- /.table-responsive -->
+                            </div>
+                            <!-- /.panel-body -->
+                        </div>
+                    {%  endfor %}
+                </div>
+                <div id="light" class="tab-pane fade panel_eq">
+                    {%  for l in light %}
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                {{ l.category }}
+                            </div>
+                            <!-- /.panel-heading -->
+                            <div class="panel-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th>Nazwa</th>
+                                            <th>Ilość</th>
+                                            <th>Dostępność</th>
+                                            <th>Opis</th>
+                                            <th>Akcje</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        {%  for product in l.products %}
+                                            {% if product.available == 0 %}
+                                                <tr class="not_available">
+                                            {% else %}
+                                                <tr>
+                                             {% endif %}
+                                                <td>{{ product.name }}</td>
+                                                <td>{{ product.quantity }}</td>
+                                                <td>{{ product.available }}</td>
+                                                <td>{{ product.description }}</td>
+                                                <td>
+                                                    <a href="{{ base_url }}equipment/edit/{{ product.product_id }}"><i class="fa fa-edit fa-fw"></i></a>
+                                                    <a href="{{ base_url }}equipment/delete_equipment/{{ product.product_id }}"><i class="fa fa-trash fa-fw"></i></a>
+                                                </td>
+                                            </tr>
+                                        {%  endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!-- /.table-responsive -->
+                            </div>
+                            <!-- /.panel-body -->
+                        </div>
+                    {%  endfor %}
+                </div>
+            </div>
+            </div>
+        <!-- /.row -->
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /#page-wrapper -->
+</div>
+<!-- /#wrapper -->
+
+{% include "templates/footer.twig" %}
